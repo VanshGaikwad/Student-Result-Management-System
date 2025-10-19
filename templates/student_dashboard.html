@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Student Dashboard | ENTC ENDSEM Portal</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f8;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #0d1b2a;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 2rem;
+      margin: 40px auto;
+      max-width: 850px;
+      background: #ffffff;
+      border-top: 5px solid #0d6efd;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-logo img {
+      width: 50px;
+      margin-right: 15px;
+    }
+
+    .header-logo h2 {
+      font-weight: 700;
+      color: #0d1b2a;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .card h3 {
+      color: #0d1b2a;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p.text-muted {
+      font-size: 0.95rem;
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+    }
+
+    .table {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #dee2e6;
+      font-size: 0.95rem;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+      padding: 0.8rem 1rem;
+    }
+
+    .table thead {
+      background-color: #0d6efd;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .table tbody tr:hover {
+      background: #e3f2fd;
+      transition: 0.3s;
+    }
+
+    .cgpa {
+      font-weight: 700;
+      color: #28a745;
+      font-size: 1.2rem;
+    }
+
+    .btn-secondary {
+      border-radius: 8px;
+      padding: 0.5rem 1.5rem;
+      font-weight: 500;
+      transition: 0.3s;
+      background-color: #0d1b2a;
+      color: #fff;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background-color: #0d3b5a;
+      color: white;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+    .text-warning {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">ENTC ENDSEM Portal</a>
+    <div class="ms-auto">
+      <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Dashboard Card -->
+<div class="container">
+  <div class="card">
+
+    <!-- Header with logo -->
+    <div class="header-logo">
+      <img src="https://img.icons8.com/color/48/000000/student-center.png" alt="Logo">
+      <h2>Official Result Portal</h2>
+    </div>
+
+    <h3>Hello, {{ session.get('student_name') }}</h3>
+    <p class="text-muted">Year: {{ year.replace('_',' ').title() }}</p>
+
+    {% if result %}
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for key in result.keys() %}
+              <tr>
+                <td><strong>{{ key }}</strong></td>
+                <td>{{ result[key] }}</td>
+              </tr>
+            {% endfor %}
+            {% if cgpa is not none %}
+              <tr>
+                <td><strong>CGPA</strong></td>
+                <td class="cgpa">{{ cgpa }}</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-warning">No result found yet for your roll number.</p>
+    {% endif %}
+
+    <a class="btn btn-secondary mt-3" href="{{ url_for('index') }}">Back to Home</a>
+  </div>
+</div>
+
+<div class="footer">
+  &copy; 2025 ENTC Department | Powered by Flask
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

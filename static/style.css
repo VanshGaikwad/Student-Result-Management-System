@@ -1,0 +1,5 @@
+body { background: #f8f9fa; padding-top: 70px; }
+.container-small { max-width: 1000px; margin: auto; }
+.card { box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.table-wrap { overflow-x:auto; }
+.footer { text-align:center; color:#6c757d; margin-top:20px; }

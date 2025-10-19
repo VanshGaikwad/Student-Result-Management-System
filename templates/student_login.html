@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Student Login | ENTC ENDSEM Portal</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #e0f7fa);
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background: #0d6efd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      color: white;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .login-card {
+      max-width: 450px;
+      margin: 50px auto;
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.95);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    .login-card h3 {
+      text-align: center;
+      font-weight: 700;
+      color: #0d6efd;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      font-weight: 500;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 0.7rem;
+    }
+
+    .btn-primary {
+      background: #0d6efd;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #0b5ed7;
+      box-shadow: 0 5px 15px rgba(13,110,253,0.3);
+    }
+
+    .btn-secondary {
+      border-radius: 10px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background-color: #0d6efd;
+      color: #fff;
+    }
+
+    .alert {
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('index') }}">ENTC ENDSEM Portal</a>
+  </div>
+</nav>
+
+<!-- Login Card -->
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show mt-4">
+          {{ msg }}
+          <button class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="login-card">
+    <h3>Student Login</h3>
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Roll Number</label>
+        <input class="form-control" name="roll_no" placeholder="Enter your Roll Number" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input class="form-control" type="password" name="password" placeholder="Enter your Password" required>
+      </div>
+      <div class="d-flex justify-content-between mt-4">
+        <a class="btn btn-secondary" href="{{ url_for('index') }}">Back</a>
+        <button class="btn btn-primary" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Manage {{ year.replace('_',' ').title() }} | ENTC ENDSEM Admin</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #e0f7fa);
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, #0d6efd, #007bff);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      padding: 2rem;
+      margin-top: 30px;
+    }
+
+    h4 {
+      color: #0d6efd;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      padding: 0.6rem 0.8rem;
+    }
+
+    .btn {
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #0d6efd;
+      border: none;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #0b5ed7;
+      box-shadow: 0 5px 15px rgba(13,110,253,0.3);
+    }
+
+    .btn-outline-secondary {
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .btn-outline-secondary:hover {
+      background: #e0f0ff;
+      color: #0d6efd;
+    }
+
+    .table {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+      padding: 0.75rem 1rem;
+    }
+
+    .table thead {
+      background: linear-gradient(90deg, #0d6efd, #007bff);
+      color: white;
+      font-weight: 600;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background: #f2f7ff;
+    }
+
+    .table tbody tr:hover {
+      background: #dbeafe;
+      transition: 0.3s;
+    }
+
+    .alert {
+      border-radius: 10px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">ENTC ENDSEM Admin</a>
+    <div class="ms-auto"><a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Logout</a></div>
+  </div>
+</nav>
+
+<div class="container mt-5 container-small">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show mt-3">
+          {{ msg }}
+          <button class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Upload & Search Card -->
+  <div class="card p-4 mb-4">
+    <h4>{{ year.replace('_',' ').title() }} Results</h4>
+
+    <form action="{{ url_for('upload_csv', year=year) }}" method="post" enctype="multipart/form-data" class="row g-2 align-items-center">
+      <div class="col-auto"><input class="form-control" type="file" name="file" accept=".csv" required></div>
+      <div class="col-auto"><button class="btn btn-success">Upload CSV</button></div>
+      <div class="col-auto"><a class="btn btn-outline-secondary" href="{{ url_for('sample_csv', year=year) }}">Sample CSV</a></div>
+    </form>
+
+    <form method="get" action="{{ url_for('manage_year', year=year) }}" class="row g-2 mt-3 align-items-center">
+      <div class="col"><input class="form-control" name="roll" placeholder="Search by Roll"></div>
+      <div class="col"><input class="form-control" name="name" placeholder="Search by Name"></div>
+      <div class="col-auto"><button class="btn btn-primary" type="submit">Search</button></div>
+      <div class="col-auto"><a class="btn btn-outline-secondary" href="{{ url_for('manage_year', year=year) }}">Reset</a></div>
+    </form>
+  </div>
+
+  <!-- Results Table Card -->
+  <div class="card p-3">
+    <div class="table-wrap">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            {% for col in columns %}
+              <th>{{ col }}</th>
+            {% endfor %}
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if rows %}
+            {% for r in rows %}
+              <tr>
+                {% for col in columns %}
+                  <td>{{ r[col] }}</td>
+                {% endfor %}
+                <td>
+                  <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_result', year=year, row_id=r['id']) }}">Edit</a>
+                  <form method="post" action="{{ url_for('delete_result', year=year, row_id=r['id']) }}" style="display:inline" onsubmit="return confirm('Delete this record?');">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr><td colspan="{{ columns|length + 1 }}" class="text-center text-muted">No records found.</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+    <form method="post" action="{{ url_for('clear_results', year=year) }}" class="mt-3" onsubmit="return confirm('Clear ALL results for this year?');">
+      <button class="btn btn-danger">Clear All Results for {{ year.replace('_',' ').title() }}</button>
+      <a class="btn btn-secondary ms-2" href="{{ url_for('admin_dashboard') }}">Back</a>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
